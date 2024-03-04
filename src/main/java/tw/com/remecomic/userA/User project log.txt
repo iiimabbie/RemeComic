@@ -1,0 +1,52 @@
+### 1117 ###
+	1. update UserAController
+		/user/user/save
+		改用 if else 判斷為新增或是修改
+		新增statusId's default & registerDate's default
+		test ok.
+
+	2. add UserAttendance bean dao
+		與UserABean相連ok(no loop)
+		test ok.
+
+### 1120 ###
+	1. update UserAController
+		/user/user/{id} & /user/simpleuser/{id}
+		findById API 改成使用@PathVariable
+		test ok.
+		
+	 	/user/user/save
+	 	邏輯改寫至service
+
+	2. update UserABadgeController
+		/badge/badge/{id} & /badge/simplebadge/{id}
+		改寫UserABadgeController的findById API 改成使用@PathVariable
+		test ok.
+		
+	3. update every bean who use Date API
+		有用到Date的所有屬性都加上時區限制，避免時區跑掉
+		@Temporal(TemporalType.TIMESTAMP)
+		@DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")
+	
+### 1126 ###
+	1. 全部打掉重練
+		所有的bean + userService + userController
+		+ badgeService + badgeController
+		status跟registerDate的default值寫好(prePersist())
+		bean裡有關照片的屬性都從byte[]轉成String，因為改成存連結
+		查詢都test ok.
+		新增跟修改的方法都有誤。
+		修改：user自己屬性的值可以成功，別的例如badge、status，無法修改
+		新增：因為有給予default，所以也是無法修改已經產生了的status和badge
+
+	2. Dto的更改
+		把Dto的轉換方法改成 BeanUtil的copyProptity
+		private全部改成public
+		更改原本的UserDto
+			只含User本表的屬性
+		新增UserSimpleDto
+			內含user基本屬性另外加上 badge, status, attendance
+		新增UserBadgeDto
+			只含Badge本表的屬性
+
